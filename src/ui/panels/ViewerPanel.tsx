@@ -2,13 +2,14 @@ import { CloseOutlined, ExpandOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import { useState } from 'react';
 import { DropOverlay } from '../DropOverlay';
+import { MeasureMenu } from '../MeasureMenu';
 import { S } from '../strings';
 import { useTakeoff } from '../takeoff';
 import { useViewer } from '../viewer';
 
 /** Hosts the 3D canvas (ViewerProvider boots the engine into it) and accepts dropped IFC files. */
 export function ViewerPanel() {
-  const { viewportRef } = useViewer();
+  const { viewer, viewportRef } = useViewer();
   const { state, openFile, fitModel, clearSelection } = useTakeoff();
   const [dragOver, setDragOver] = useState(false);
   const ready = state.status.kind === 'ready';
@@ -28,6 +29,7 @@ export function ViewerPanel() {
     >
       <div className="viewer" ref={viewportRef} />
       <DropOverlay dragOver={dragOver} />
+      {ready && viewer && <MeasureMenu viewer={viewer} />}
       {ready && (
         <div className="view-controls" role="toolbar" aria-label="view controls">
           <Tooltip title={S.viewer.fit} placement="left">

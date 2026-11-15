@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import * as OBC from '@thatopen/components';
 import * as OBF from '@thatopen/components-front';
 import { createEngine } from './engine';
+import { createToolManager } from './tools/toolManager';
+import { createMeasureService } from './services/measure';
 
 const MODEL = 'model';
 const SELECT = 'select';
@@ -21,6 +23,9 @@ export async function createViewer(container: HTMLElement) {
   const update = () => engine.fragments.core.update(true);
   const items = (ids: number[]): OBC.ModelIdMap => ({ [MODEL]: new Set(ids) });
   const loaded = () => engine.fragments.list.has(MODEL);
+  const tools = createToolManager(engine);
+  tools.register('select', {}); // picking stays below; measuring tools take over clicks while active
+  const measure = createMeasureService(engine, tools);
 
   // Click (not drag) → raycast → expressID (= fragments localId, spike S1).
   const pickListeners = new Set<(expressId: number | null) => void>();
@@ -30,7 +35,7 @@ export async function createViewer(container: HTMLElement) {
   dom.addEventListener('pointerup', async (e) => {
     const isClick = down && e.button === 0 && Math.hypot(e.clientX - down.x, e.clientY - down.y) < CLICK_MOVE_PX;
     down = null;
-    if (!isClick || !loaded()) return;
+    if (!isClick || !loaded() || tools.store.getSnapshot().active !== 'select') return;
     const hit = await engine.fragments.raycast({ camera: engine.world.camera.three, mouse: new THREE.Vector2(e.clientX, e.clientY), dom });
     for (const l of pickListeners) l(hit ? hit.localId : null);
   });
@@ -43,13 +48,17 @@ export async function createViewer(container: HTMLElement) {
   }
 
   return {
+    tools,
+    measure,
     async load(frag: Uint8Array) {
+      measure.deleteAll(); // measurements belong to the previous model
       if (loaded()) await engine.fragments.core.disposeModel(MODEL);
       await engine.fragments.core.load(frag, { modelId: MODEL, camera: engine.world.camera.three });
       await update();
       await fit();
     },
     async unload() {
+      measure.deleteAll();
       if (loaded()) await engine.fragments.core.disposeModel(MODEL);
     },
     async select(ids: number[]) {

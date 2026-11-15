@@ -50,5 +50,17 @@ export const S = {
     elements: 'elements',
     storeys: 'storeys',
   },
+  measure: {
+    group: 'Measurement',
+    lengthFree: 'Length free',
+    lengthEdge: 'Length edge',
+    areaFree: 'Area free',
+    areaRect: 'Area rectangle',
+    areaFace: 'Area face',
+    volume: 'Volume',
+    show: 'Show measurements',
+    hide: 'Hide measurements',
+    deleteAll: 'Delete all measurements',
+  },
   footer: { sample: 'Sample: NBU Medical Clinic (architecture), buildingSMART / NIBS Common BIM Files.' },
 };
