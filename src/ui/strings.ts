@@ -1,0 +1,54 @@
+// All UI text in one place (English only, decided 2026-10-24). Domain labels shared with Excel live in core/labels.ts.
+export const MAX_MB = 200;
+
+export const S = {
+  appName: 'ModelQTO',
+  descriptor: 'IFC quantity takeoff',
+  header: { open: 'Open IFC', sample: 'Sample', export: 'Export Excel', noFile: 'No model loaded' },
+  toolbar: {
+    groupBy: 'Group by',
+    storeys: 'Storeys',
+    allStoreys: 'All',
+    hideClasses: 'Hide classes',
+    noneHidden: 'None',
+    fields: { ifcClass: 'Element class', typeName: 'Type', material: 'Material', storey: 'Storey' },
+    expandAll: 'Expand all',
+    collapseAll: 'Collapse all',
+  },
+  viewer: { fit: 'Zoom to fit model', clear: 'Clear selection' },
+  drop: {
+    title: 'Drop an IFC file to start a takeoff',
+    hint: `IFC2x3 or IFC4, up to ~${MAX_MB} MB.`,
+    privacy: 'Files are processed locally and never leave your browser.',
+    browse: 'Choose file…',
+    sample: 'Load sample: NBU Medical Clinic',
+  },
+  progress: { geometry: 'Reading geometry…', quantities: 'Measuring quantities…' },
+  boq: {
+    region: 'bill of quantities',
+    title: 'Bill of quantities',
+    empty: 'The bill of quantities appears here once a model is loaded.',
+    meta: (lines: number, elements: number) => `${lines.toLocaleString('en')} line items · ${elements.toLocaleString('en')} elements`,
+    columns: { item: 'Item', source: 'Source', count: 'Count', unit: 'Unit', quantity: 'Quantity', unitPrice: 'Unit price', amount: 'Amount' },
+    total: 'Total',
+  },
+  errors: {
+    'not-ifc': 'This is not an IFC file. Please choose a .ifc file (IFC2x3 or IFC4).',
+    'out-of-memory': `The browser ran out of memory. Files above ~${MAX_MB} MB may not open.`,
+    parse: 'The IFC file could not be read.',
+  },
+  messages: {
+    notInTakeoff: 'This element is not part of the takeoff (or is filtered out).',
+    noQto: 'This file has no base quantities: every value is computed from geometry.',
+    large: (mb: number) => `This file is ${mb} MB; files above ~${MAX_MB} MB may not open.`,
+  },
+  status: {
+    idle: 'Ready',
+    loading: 'Loading',
+    ready: 'Model loaded',
+    error: 'Error',
+    elements: 'elements',
+    storeys: 'storeys',
+  },
+  footer: { sample: 'Sample: NBU Medical Clinic (architecture), buildingSMART / NIBS Common BIM Files.' },
+};
